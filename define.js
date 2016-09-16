@@ -1,12 +1,8 @@
-var load = require('./load');
-var req = require('./require');
+var webchain = require('./webchain');
 module.exports = (isExecute, name, dependencies, callback) => {
-    load(name, dependencies, (err, resolvedName) => {
-        if (err) {
-            throw err;
-        }
+    webchain.load(name, dependencies, callback, (err, resolvedName) => {
         if (isExecute) {
-            req(resolvedName);
+            webchain.require(resolvedName);
         }
     });
 }

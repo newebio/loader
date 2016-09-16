@@ -1,6 +1,6 @@
-var Define = require('./define');
+var webchain = require('./webchain');
 module.exports = (code) => {
-    var define = Define.bind(undefined, false);
+    var define = webchain.define.bind(undefined, false);
     _evaluate(define, code);
 }
 function _evaluate(define) {

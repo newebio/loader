@@ -1,6 +1,6 @@
 var resolveName = require('./resolve-name');
 var webchain = require('./webchain');
-module.exports = (name, dependencies, callback) => {
+module.exports = (name, dependencies, executeCallback, callback) => {
     var resolvedName = resolveName(name);
     if (webchain.cache[resolvedName]) {
         console.warn("Module " + resolvedName + " already exists in cache")
@@ -8,7 +8,7 @@ module.exports = (name, dependencies, callback) => {
     var depNames = dependencies.map((dep) => {
         return resolvedName(dep);
     })
-    webchain.sources[resolvedName] = callback.bind(undefined, depNames);
+    webchain.sources[resolvedName] = executeCallback.bind(undefined, depNames);
     var i = 0;
     if (dependencies.length == 0) {
         callback(null, resolvedName);

@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "test": "istanbul cover node_modules/jasmine/bin/jasmine.js",
+    "watch:test": "nodemon --exec \"jasmine\"",
+    "watch:cover": "nodemon --exec \"npm test\""
   },
   "repository": {
     "type": "git",
@@ -22,8 +25,10 @@
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.14.0",
     "coveralls": "^2.11.13",
+    "fixture2": "0.0.3",
     "istanbul": "^0.4.5",
     "jasmine": "^2.4.1",
+    "mock2": "0.0.12",
     "webpack": "^1.13.2"
   }
 }
