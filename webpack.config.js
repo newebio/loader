@@ -2,7 +2,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: __dirname + "/index.js",
     output: {
-        filename: __dirname + "/dist/neweb-loader.js"
+        filename: process.env.NODE_ENV == 'production' ? __dirname + "/dist/neweb-loader.min.js" : __dirname + "/dist/neweb-loader.js"
     },
     module: {
         loaders: [
@@ -16,11 +16,11 @@ module.exports = {
             }
         ]
     },
-    plugins: [
+    plugins: process.env.NODE_ENV == 'production' ? [
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             }
         })
-    ]
+    ] : []
 }

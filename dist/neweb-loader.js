@@ -1,1 +1,325 @@
-!function(e){function t(n){if(r[n])return r[n].exports;var o=r[n]={exports:{},id:n,loaded:!1};return e[n].call(o.exports,o,o.exports,t),o.loaded=!0,o.exports}var r={};return t.m=e,t.c=r,t.p="",t(0)}([function(e,t,r){"use strict";var n=r(1);if("undefined"!=typeof window){var o=r(6);window.define=o.bind(void 0,!0),window.webchain=n}"undefined"!=typeof e&&e.exports&&(e.exports=n)},function(e,t,r){"use strict";var n=r(2),o=r(9),i={};i.config=n.bind(void 0,i),i.require=o,e.exports=i},function(e,t,r){"use strict";r(3);e.exports=function(e,t){t=t||{},t.loaders=t.loaders||{}}},function(e,t,r){"use strict";var n=(r(4),r(5));e.exports=function(e,t,r){var o="onload"in new XMLHttpRequest?XMLHttpRequest:XDomainRequest,i=new o;i.open("GET","http://anywhere.com/request",!0),i.onload=function(){n(this.responseText),r()},i.onerror=function(){r("Error: "+this.status)},i.send()}},function(e,t){"use strict";function r(e,t){var r,n="",o=0;for(var i in e)if(!e.hasOwnProperty||e.hasOwnProperty(i))if(i.indexOf("*")===-1){if(t==i)return e[i];if(t.substr(0,i.length-1)==i.substr(0,i.length-1)&&(t.length<i.length||t[i.length-1]==i[i.length-1])&&("/"==e[i][e[i].length-1]||""==e[i]))return e[i].substr(0,e[i].length-1)+(t.length>i.length?(e[i]&&"/"||"")+t.substr(i.length):"")}else{var s=i.split("*");if(s.length>2)throw new TypeError("Only one wildcard in a path is permitted");var u=s[0].length;u>=o&&t.substr(0,s[0].length)==s[0]&&t.substr(t.length-s[1].length)==s[1]&&(o=u,n=i,r=t.substr(s[0].length,t.length-s[1].length-s[0].length))}var c=e[n];return"string"==typeof r&&(c=c.replace("*",r)),c}e.exports=r},function(module,exports,__webpack_require__){"use strict";function _evaluate(define){eval(arguments[1])}var Define=__webpack_require__(6);module.exports=function(e){var t=Define.bind(void 0,!1);_evaluate(t,e)}},function(e,t,r){"use strict";var n=r(7),o=r(9);e.exports=function(e,t,r,i){n(t,r,function(t,r){if(t)throw t;e&&o(r)})}},function(e,t,r){"use strict";var n=r(8),o=r(1);e.exports=function(e,t,r){var i=n(e);o.cache[i]&&console.warn("Module "+i+" already exists in cache");var s=t.map(function(e){return i(e)});o.sources[i]=r.bind(void 0,s);var u=0;return 0==t.length?void r(null,i):void t.map(function(e){var n=e[0],s=o.config.resolve.loaders[n];if(!s)throw new Error("Not found loader for type "+n);s.loader(e[1],s.config,function(e){if(e)throw new Error(e);u++,t.length==u&&r(null,i)})})}},function(e,t){"use strict";e.exports=function(e){return e.join("~")}},function(e,t,r){"use strict";var n=r(1),o=r(10);e.exports=function(e){if(n.cache[e])return n.cache[e];if(!n.sources[e])throw new Error("Not found module "+e+" for require");return n.cache[e]=o(e),n.cache[e]}},function(e,t,r){"use strict";var n=r(1);e.exports=function(e){var t=n.require,r={},o={exports:r};return n.sources[e](t,r,o),o.exports}}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var webchain = __webpack_require__(1);
+	if (typeof window !== "undefined") {
+	    window.define = webchain.define.bind(undefined, true);
+	    window.webchain = webchain;
+	}
+	if (typeof module !== "undefined" && module.exports) {
+	    module.exports = webchain;
+	}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var config = __webpack_require__(2);
+	var req = __webpack_require__(6);
+	var define = __webpack_require__(8);
+	var load = __webpack_require__(9);
+	var webchain = {};
+	webchain.config = config.bind(undefined, webchain);
+	webchain.require = req;
+	webchain.define = define;
+	webchain.load = load;
+	module.exports = webchain;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var ajaxLoader = __webpack_require__(3);
+	var defaultConfig = {
+	    resolve: {
+	        ".": {
+	            loader: ajaxLoader,
+	            config: {
+	                baseUrl: "/",
+	                paths: {
+	                    "*": "*"
+	                }
+	            }
+	        },
+	        npm: {
+	            loader: ajaxLoader,
+	            config: {
+	                baseUrl: "neweb_modules",
+	                paths: {
+	                    "*": "*"
+	                }
+	            }
+	        }
+	    }
+	};
+	module.exports = function (neweb, opts) {
+	    opts = opts || {};
+	    opts.loaders = opts.loaders || {};
+	};
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var resolvePath = __webpack_require__(4);
+	var evaluate = __webpack_require__(5);
+	module.exports = function (modulePath, config, callback) {
+	    var XHR = "onload" in new XMLHttpRequest() ? XMLHttpRequest : XDomainRequest;
+	    var xhr = new XHR();
+	    xhr.open('GET', 'http://anywhere.com/request', true);
+	    xhr.onload = function () {
+	        evaluate(this.responseText);
+	        callback();
+	    };
+	    xhr.onerror = function () {
+	        callback('Error: ' + this.status);
+	    };
+	    xhr.send();
+	};
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/* Get from https://github.com/systemjs/systemjs/blob/96447606dc0336f359831615ec0464ffde9f7c8f/lib/paths.js
+	MIT License
+	-----------
+
+	Copyright (C) 2013-2016 Guy Bedford
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+	*/
+	function paths(paths, name) {
+	    // most specific (most number of slashes in path) match wins
+	    var pathMatch = '',
+	        wildcard,
+	        maxWildcardPrefixLen = 0;
+
+	    // check to see if we have a paths entry
+	    for (var p in paths) {
+	        if (paths.hasOwnProperty && !paths.hasOwnProperty(p)) continue;
+
+	        // exact path match
+	        if (p.indexOf('*') === -1) {
+	            if (name == p) return paths[p];
+
+	            // support trailing / in paths rules
+	            else if (name.substr(0, p.length - 1) == p.substr(0, p.length - 1) && (name.length < p.length || name[p.length - 1] == p[p.length - 1]) && (paths[p][paths[p].length - 1] == '/' || paths[p] == '')) {
+	                    return paths[p].substr(0, paths[p].length - 1) + (name.length > p.length ? (paths[p] && '/' || '') + name.substr(p.length) : '');
+	                }
+	        }
+	        // wildcard path match
+	        else {
+	                var pathParts = p.split('*');
+	                if (pathParts.length > 2) throw new TypeError('Only one wildcard in a path is permitted');
+
+	                var wildcardPrefixLen = pathParts[0].length;
+	                if (wildcardPrefixLen >= maxWildcardPrefixLen && name.substr(0, pathParts[0].length) == pathParts[0] && name.substr(name.length - pathParts[1].length) == pathParts[1]) {
+	                    maxWildcardPrefixLen = wildcardPrefixLen;
+	                    pathMatch = p;
+	                    wildcard = name.substr(pathParts[0].length, name.length - pathParts[1].length - pathParts[0].length);
+	                }
+	            }
+	    }
+
+	    var outPath = paths[pathMatch];
+	    if (typeof wildcard == 'string') outPath = outPath.replace('*', wildcard);
+
+	    return outPath;
+	}
+	module.exports = paths;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var webchain = __webpack_require__(1);
+	module.exports = function (code) {
+	    var define = webchain.define.bind(undefined, false);
+	    _evaluate(define, code);
+	};
+	function _evaluate(define) {
+	    eval(arguments[1]);
+	}
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var webchain = __webpack_require__(1);
+	var execute = __webpack_require__(7);
+	module.exports = function (name) {
+	    if (webchain.cache[name]) {
+	        return webchain.cache[name];
+	    }
+	    if (!webchain.sources[name]) {
+	        throw new Error("Not found module " + name + " for require");
+	    }
+	    webchain.cache[name] = execute(name);
+	    return webchain.cache[name];
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	module.exports = function (name) {
+	    var webchain = __webpack_require__(1);
+	    return _execute.call(undefined, webchain.require, webchain.sources[name].toString());
+	};
+	function _execute(require) {
+	    var exports;
+	    var module = {
+	        exports: exports
+	    };
+	    eval("" + arguments[1].slice(arguments[1].indexOf("{") + 1, arguments[1].lastIndexOf("}")) + "");
+	    return typeof exports === "undefined" ? module.exports : exports;
+	}
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var webchain = __webpack_require__(1);
+	module.exports = function (isExecute, name, dependencies, callback) {
+	    webchain.load(name, dependencies, callback, function (err, resolvedName) {
+	        if (isExecute) {
+	            webchain.require(resolvedName);
+	        }
+	    });
+	};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var resolveName = __webpack_require__(10);
+	var resolveDepNames = __webpack_require__(11);
+	var webchain = __webpack_require__(1);
+	module.exports = function (name, dependencies, executeCallback, callback) {
+	    var resolvedName = resolveName(name);
+	    if (typeof webchain.cache[resolvedName] !== "undefined") {
+	        console.warn("Module " + resolvedName + " already exists in cache");
+	    }
+	    var depNames = resolveDepNames(dependencies);
+	    webchain.sources[resolvedName] = executeCallback.bind(undefined, depNames);
+	    var i = 0;
+	    if (dependencies.length == 0) {
+	        callback(null, resolvedName);
+	        return;
+	    }
+	    dependencies.map(function (dep) {
+	        var typeName = dep[0];
+	        var typeLoaderConfig = webchain.config.resolve.loaders[typeName];
+	        if (!typeLoaderConfig) {
+	            throw new Error("Not found loader for type " + typeName);
+	        }
+	        typeLoaderConfig.loader(dep[1], typeLoaderConfig.config, function (err) {
+	            if (err) {
+	                throw new Error(err);
+	            }
+	            i++;
+	            if (dependencies.length == i) {
+	                callback(null, resolvedName);
+	            }
+	        });
+	    });
+	};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function (fullName) {
+	    return fullName.join("~");
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function (deps, name) {
+	    var names = [];
+	    deps.map(function (d) {
+	        if (typeof name === "undefined") {
+	            name = [d[0]];
+	        } else {
+	            name.push(d[0]);
+	        }
+	    });
+	    return name;
+	};
+
+/***/ }
+/******/ ]);

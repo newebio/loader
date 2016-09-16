@@ -13,7 +13,7 @@ module.exports = (name, dependencies, executeCallback, callback) => {
         callback(null, resolvedName);
         return;
     }
-    dependencies.map((dep) => {
+    depNames.map((dep) => {
         var typeName = dep[0];
         var typeLoaderConfig = webchain.config.resolve.loaders[typeName];
         if (!typeLoaderConfig) {

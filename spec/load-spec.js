@@ -9,6 +9,7 @@ describe("Load", () => {
         global.console.error = f("consoleError", jasmine.createSpy());
         f("load", mock.require('./../load', {
             './../resolve-name': f("resolveName", jasmine.createSpy()),
+            './../resolve-deps-names': f("resolveDepsNames", jasmine.createSpy()),
             './../webchain': f("webchain", {
                 cache: {},
                 require: f("require", jasmine.createSpy()),
@@ -23,7 +24,9 @@ describe("Load", () => {
             })
         }
         ));
+        f("webchain").config.resolve.loaders[f("type1")] = f("loaderConfig", { config: f("loaderConfigValue"), loader: f("loader", jasmine.createSpy()) });
         f("executeCallback", jasmine.createSpy());
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", []))
         f("callback", jasmine.createSpy());
     })
     it("when call, should resolve name", () => {
@@ -38,13 +41,45 @@ describe("Load", () => {
     })
     it("when called, should save callback to sources", () => {
         f("resolveName").and.returnValue(f("resolvedName"));
-        f("load")(f("name"), [f("dep1")], f("executeCallback"), f("callback"));
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames"))
+        f("load")(f("name"), f("deps", [f("dep1", [f("type1")])]), f("executeCallback"), f("callback"));
         var sources = {};
         sources[f("resolvedName")] = jasmine.any(Function);
         expect(f("webchain").sources).toEqual(sources);
         f("webchain").sources[f("resolvedName")]();
-        var depNames = [""];
-        expect(f("executeCallback").calls.allArgs()).toEqual([[depNames]]);
+        expect(f("resolveDepsNames").calls.allArgs()).toEqual([[f("deps")]])
+        expect(f("executeCallback").calls.allArgs()).toEqual([[f("resolvedDepsNames")]]);
+    })
+    it("when empty deps, should call callback with resolved name", () => {
+        f("resolveName").and.returnValue(f("resolvedName"));
+        f("load")(f("name"), [], f("executeCallback"), f("callback"));
+        expect(f("callback").calls.allArgs()).toEqual([[null, f("resolvedName")]]);
+    })
+    it("when not exists loader for dep, should throw error", () => {
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", [[f("type2"), "mod1"]]))
+        expect(f("load").bind(this, f("name"), f("deps", [f("dep1", [f("type2")])]), f("executeCallback"), f("callback"))).toThrowError("Not found loader for type " + f("type2"));
+    })
+    it("when all loader exists, should call every loader with config", () => {
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", [[f("type1"), f("type1Name")]]));
+        f("load")(f("name"), f("deps", [f("dep1", [f("type1", [])])]), f("executeCallback"), f("callback"));
+        expect(f("loader").calls.allArgs()).toEqual([[f("type1Name"), f("loaderConfigValue"), jasmine.any(Function)]])
+    })
+    it("when loader return error, should throw it", () => {
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", [[f("type1"), f("type1Name")]]));
+        f("load")(f("name"), f("deps", [f("dep1", [f("type1", [])])]), f("executeCallback"), f("callback"));
+        expect(f("loader").calls.argsFor(0)[2].bind(this, f("error"))).toThrowError(f("error"));
+    })
+    it("when all deps was loaded, should call callback with resolved name", () => {
+        f("resolveName").and.returnValue(f("resolvedName"));
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", 
+        [
+            [f("type1"), f("type1Name1")],
+            [f("type1"), f("type1Name2")]
+        ]));
+        f("load")(f("name"), f("deps", [f("dep1", [f("type1", [])])]), f("executeCallback"), f("callback"));
+        f("loader").calls.argsFor(0)[2]();
+        f("loader").calls.argsFor(1)[2]();
+        expect(f("callback").calls.allArgs()).toEqual([[null, f("resolvedName")]]);
     })
     afterEach(() => {
         global.console.warn = oldConsoleWarn;
