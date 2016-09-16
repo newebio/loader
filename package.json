@@ -1,0 +1,29 @@
+{
+  "name": "webchain-loader",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newebio/loader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/newebio/loader/issues"
+  },
+  "homepage": "https://github.com/newebio/loader#readme",
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "coveralls": "^2.11.13",
+    "istanbul": "^0.4.5",
+    "jasmine": "^2.4.1",
+    "webpack": "^1.13.2"
+  }
+}
