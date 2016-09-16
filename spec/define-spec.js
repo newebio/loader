@@ -3,12 +3,11 @@ var fixtures = require('fixture2'), f;
 describe("Define", () => {
     beforeEach(() => {
         f = fixtures();
-        f("define", mock.require('./../define', {
-            './../webchain': {
-                load: f("load", jasmine.createSpy()),
-                require: f("require", jasmine.createSpy())
-            }
-        }));
+        f("webchain", {
+            load: f("load", jasmine.createSpy()),
+            require: f("require", jasmine.createSpy())
+        })
+        f("define", mock.require('./../define').bind(this, f("webchain")));
         f("define")(true, f("name"), f("deps"), f("callback"));
     })
     it("when define, should call load", () => {

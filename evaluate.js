@@ -1,5 +1,4 @@
-var webchain = require('./webchain');
-module.exports = (code) => {
+module.exports = (webchain, code) => {
     var define = webchain.define.bind(undefined, false);
     _evaluate(define, code);
 }

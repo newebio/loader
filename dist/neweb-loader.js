@@ -46,10 +46,11 @@
 
 	"use strict";
 
-	var webchain = __webpack_require__(1);
+	var Webchain = __webpack_require__(1);
+	var webchain = Webchain();
 	if (typeof window !== "undefined") {
-	    window.define = webchain.define.bind(undefined, true);
 	    window.webchain = webchain;
+	    window.define = webchain.define.bind(undefined, true);
 	}
 	if (typeof module !== "undefined" && module.exports) {
 	    module.exports = webchain;
@@ -63,14 +64,18 @@
 
 	var config = __webpack_require__(2);
 	var req = __webpack_require__(6);
-	var define = __webpack_require__(8);
-	var load = __webpack_require__(9);
-	var webchain = {};
-	webchain.config = config.bind(undefined, webchain);
-	webchain.require = req;
-	webchain.define = define;
-	webchain.load = load;
-	module.exports = webchain;
+	var define = __webpack_require__(7);
+	var load = __webpack_require__(8);
+	module.exports = function () {
+	    return {
+	        config: config,
+	        define: define,
+	        load: load,
+	        require: req,
+	        sources: {},
+	        cache: {}
+	    };
+	};
 
 /***/ },
 /* 2 */
@@ -188,12 +193,11 @@
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
-	var webchain = __webpack_require__(1);
-	module.exports = function (code) {
+	module.exports = function (webchain, code) {
 	    var define = webchain.define.bind(undefined, false);
 	    _evaluate(define, code);
 	};
@@ -205,10 +209,9 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var webchain = __webpack_require__(1);
-	var execute = __webpack_require__(7);
 	module.exports = function (name) {
 	    if (webchain.cache[name]) {
 	        return webchain.cache[name];
@@ -216,37 +219,17 @@
 	    if (!webchain.sources[name]) {
 	        throw new Error("Not found module " + name + " for require");
 	    }
-	    webchain.cache[name] = execute(name);
+	    webchain.cache[name] = webchain.execute(name);
 	    return webchain.cache[name];
 	};
 
 /***/ },
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 
-	module.exports = function (name) {
-	    var webchain = __webpack_require__(1);
-	    return _execute.call(undefined, webchain.require, webchain.sources[name].toString());
-	};
-	function _execute(require) {
-	    var exports;
-	    var module = {
-	        exports: exports
-	    };
-	    eval("" + arguments[1].slice(arguments[1].indexOf("{") + 1, arguments[1].lastIndexOf("}")) + "");
-	    return typeof exports === "undefined" ? module.exports : exports;
-	}
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var webchain = __webpack_require__(1);
-	module.exports = function (isExecute, name, dependencies, callback) {
+	module.exports = function (webchain, isExecute, name, dependencies, callback) {
 	    webchain.load(name, dependencies, callback, function (err, resolvedName) {
 	        if (isExecute) {
 	            webchain.require(resolvedName);
@@ -255,13 +238,13 @@
 	};
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var resolveName = __webpack_require__(10);
-	var resolveDepNames = __webpack_require__(11);
+	var resolveName = __webpack_require__(9);
+	var resolveDepNames = __webpack_require__(10);
 	var webchain = __webpack_require__(1);
 	module.exports = function (name, dependencies, executeCallback, callback) {
 	    var resolvedName = resolveName(name);
@@ -275,7 +258,7 @@
 	        callback(null, resolvedName);
 	        return;
 	    }
-	    dependencies.map(function (dep) {
+	    depNames.map(function (dep) {
 	        var typeName = dep[0];
 	        var typeLoaderConfig = webchain.config.resolve.loaders[typeName];
 	        if (!typeLoaderConfig) {
@@ -294,7 +277,7 @@
 	};
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -304,7 +287,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";

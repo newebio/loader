@@ -2,9 +2,13 @@ var config = require('./config');
 var req = require('./require');
 var define = require('./define');
 var load = require('./load');
-var webchain = {};
-webchain.config = config.bind(this, webchain);
-webchain.require = req;
-webchain.define = define;
-webchain.load = load;
-module.exports = webchain;
+module.exports = () => {
+    return {
+        config: config,
+        define: define,
+        load: load,
+        require: req,
+        sources: {},
+        cache: {}
+    }
+}

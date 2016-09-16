@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
+    "build:watch": "webpack -w",
     "test": "istanbul cover node_modules/jasmine/bin/jasmine.js",
     "watch:test": "nodemon --exec \"jasmine\"",
     "watch:cover": "nodemon --exec \"npm test\""

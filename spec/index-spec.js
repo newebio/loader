@@ -8,9 +8,9 @@ describe("Index", () => {
     it("when window exists, should add webchain and bind define to window-object", () => {
         global.window = f("window", {});
         mock.require("./../index", {
-            "./../webchain": f("webchain", {
+            "./../webchain": f("webchain", jasmine.createSpy().and.returnValue({
                 define: f("define", jasmine.createSpy())
-            })
+            }))
         })
         expect(f("window").webchain).toBe(f("webchain"));
         expect(f("window").define).toEqual(jasmine.any(Function));
@@ -19,16 +19,16 @@ describe("Index", () => {
     })
     it("when window not exists, should not throw", () => {
         mock.require("./../index", {
-            "./../webchain": f("webchain", {
+            "./../webchain": f("webchain", jasmine.createSpy().and.returnValue({
                 define: f("define", jasmine.createSpy())
-            })
+            }))
         })
     })
     it("when load as commonjs module, should export webchain", () => {
         expect(mock.require("./../index", {
-            "./../webchain": f("webchain", {
+            "./../webchain": f("webchain", jasmine.createSpy().and.returnValue({
                 define: f("define", jasmine.createSpy())
-            })
+            }))
         })).toBe(f("webchain"));
     })
     afterEach(() => {

@@ -1,5 +1,4 @@
-module.exports = (name) => {
-    var webchain = require('./webchain');
+module.exports = (webchain, name) => {
     return _execute.call(undefined, webchain.require, webchain.sources[name].toString())
 }
 function _execute(require) {

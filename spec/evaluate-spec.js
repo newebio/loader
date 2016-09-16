@@ -1,13 +1,9 @@
-var mock = require('mock2');
 var fixtures = require('fixture2'), f;
 describe("Evaluate", () => {
     beforeEach(() => {
         f = fixtures();
-        f("evaluate", mock.require('./../evaluate', {
-            './../webchain': {
-                define: f("define", jasmine.createSpy())
-            }
-        }));
+        f("webchain", { define: f("define", jasmine.createSpy()) })
+        f("evaluate", require('./../evaluate').bind(this, f("webchain")));
     })
     it("when call, should eval with define function", () => {
         f("evaluate")(f("code", "define(1)"));
