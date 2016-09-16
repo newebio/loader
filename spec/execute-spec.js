@@ -1,7 +1,7 @@
 var mock = require('mock2');
 var fixtures = require('fixture2'), f;
 describe("Execute", () => {
-    beforeAll(() => {
+    beforeEach(() => {
         f = fixtures();
         f("execute", mock.require('./../execute', {
             './../webchain': {
