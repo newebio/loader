@@ -1,11 +1,15 @@
-module.exports = (webchain, name) => {
-    return _execute.call(undefined, webchain.require, webchain.sources[name].toString())
+module.exports = function (name) {
+    return _execute.call(undefined, this.require, this.sources[name].dependencies, this.sources[name].callback.toString());
 }
-function _execute(require) {
+/* eslint-disable no-unused-vars */
+function _execute(require, dependencies) {
     var exports;
     var module = {
         exports: exports
     }
-    eval("" + arguments[1].slice(arguments[1].indexOf("{") + 1, arguments[1].lastIndexOf("}")) + "");
+    arguments[2] = arguments[2].trim();
+    if (arguments[2]) {
+        eval("" + arguments[2].slice(arguments[2].indexOf("{") + 1, arguments[2].lastIndexOf("}")) + "");
+    }
     return typeof (exports) === "undefined" ? module.exports : exports;
 }

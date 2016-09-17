@@ -46,11 +46,10 @@
 
 	"use strict";
 
-	var Webchain = __webpack_require__(1);
-	var webchain = Webchain();
+	var webchain = __webpack_require__(1);
 	if (typeof window !== "undefined") {
 	    window.webchain = webchain;
-	    window.define = webchain.define.bind(undefined, true);
+	    window.define = webchain.define.bind(webchain, true);
 	}
 	if (typeof module !== "undefined" && module.exports) {
 	    module.exports = webchain;
@@ -66,15 +65,15 @@
 	var req = __webpack_require__(6);
 	var define = __webpack_require__(7);
 	var load = __webpack_require__(8);
-	module.exports = function () {
-	    return {
-	        config: config,
-	        define: define,
-	        load: load,
-	        require: req,
-	        sources: {},
-	        cache: {}
-	    };
+	var execute = __webpack_require__(11);
+	module.exports = {
+	    config: config,
+	    define: define,
+	    load: load,
+	    execute: execute,
+	    require: req,
+	    sources: {},
+	    cache: {}
 	};
 
 /***/ },
@@ -197,30 +196,30 @@
 
 	"use strict";
 
-	module.exports = function (webchain, code) {
-	    var define = webchain.define.bind(undefined, false);
+	module.exports = function (code) {
+	    var define = this.define.bind(undefined, false);
 	    _evaluate(define, code);
 	};
+	/* eslint-disable no-unused-vars */
 	function _evaluate(define) {
 	    eval(arguments[1]);
 	}
 
 /***/ },
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 
-	var webchain = __webpack_require__(1);
 	module.exports = function (name) {
-	    if (webchain.cache[name]) {
-	        return webchain.cache[name];
+	    if (this.cache[name]) {
+	        return this.cache[name];
 	    }
-	    if (!webchain.sources[name]) {
+	    if (!this.sources[name]) {
 	        throw new Error("Not found module " + name + " for require");
 	    }
-	    webchain.cache[name] = webchain.execute(name);
-	    return webchain.cache[name];
+	    this.cache[name] = this.execute(name);
+	    return this.cache[name];
 	};
 
 /***/ },
@@ -229,10 +228,12 @@
 
 	"use strict";
 
-	module.exports = function (webchain, isExecute, name, dependencies, callback) {
-	    webchain.load(name, dependencies, callback, function (err, resolvedName) {
+	module.exports = function (isExecute, name, dependencies, callback) {
+	    var _this = this;
+
+	    this.load(name, dependencies, callback, function (err, resolvedName) {
 	        if (isExecute) {
-	            webchain.require(resolvedName);
+	            _this.require(resolvedName);
 	        }
 	    });
 	};
@@ -245,14 +246,20 @@
 
 	var resolveName = __webpack_require__(9);
 	var resolveDepNames = __webpack_require__(10);
-	var webchain = __webpack_require__(1);
 	module.exports = function (name, dependencies, executeCallback, callback) {
+	    var _this = this;
+
 	    var resolvedName = resolveName(name);
-	    if (typeof webchain.cache[resolvedName] !== "undefined") {
+	    if (typeof this.cache[resolvedName] !== "undefined") {
+	        /* eslint-disable no-console */
 	        console.warn("Module " + resolvedName + " already exists in cache");
+	        /* eslint-enable */
 	    }
 	    var depNames = resolveDepNames(dependencies);
-	    webchain.sources[resolvedName] = executeCallback.bind(undefined, depNames);
+	    this.sources[resolvedName] = {
+	        callback: executeCallback,
+	        dependencies: depNames
+	    };
 	    var i = 0;
 	    if (dependencies.length == 0) {
 	        callback(null, resolvedName);
@@ -260,7 +267,7 @@
 	    }
 	    depNames.map(function (dep) {
 	        var typeName = dep[0];
-	        var typeLoaderConfig = webchain.config.resolve.loaders[typeName];
+	        var typeLoaderConfig = _this.config.resolve.loaders[typeName];
 	        if (!typeLoaderConfig) {
 	            throw new Error("Not found loader for type " + typeName);
 	        }
@@ -303,6 +310,28 @@
 	    });
 	    return name;
 	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function (name) {
+	    return _execute.call(undefined, this.require, this.sources[name].dependencies, this.sources[name].callback.toString());
+	};
+	/* eslint-disable no-unused-vars */
+	function _execute(require, dependencies) {
+	    var exports;
+	    var module = {
+	        exports: exports
+	    };
+	    arguments[2] = arguments[2].trim();
+	    if (arguments[2]) {
+	        eval("" + arguments[2].slice(arguments[2].indexOf("{") + 1, arguments[2].lastIndexOf("}")) + "");
+	    }
+	    return typeof exports === "undefined" ? module.exports : exports;
+	}
 
 /***/ }
 /******/ ]);

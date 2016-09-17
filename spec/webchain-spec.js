@@ -5,13 +5,15 @@ describe("Singletone", () => {
             './../load': f("load"),
             './../config': f("config"),
             './../require': f("require"),
-            './../define': f("define")
+            './../define': f("define"),
+            './../execute': f("execute")
         });
-        expect(webchain()).toEqual({
+        expect(webchain).toEqual({
             load: f("load"),
             config: f("config"),
             require: f("require"),
             define: f("define"),
+            execute: f("execute"),
             sources: {},
             cache: {}
         })

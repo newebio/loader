@@ -10,7 +10,7 @@ describe("Execute", () => {
                 })
             }
         })
-        f("execute", require('./../execute').bind(this, f("webchain")));
+        f("execute", require('./../execute').bind(f("webchain")));
     })
     it("when call, should eval as commonjs module and return exports", () => {
         f("require").and.returnValue(f("mod2Export"));

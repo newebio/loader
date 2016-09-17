@@ -3,27 +3,26 @@ var fixtures = require('fixture2'), f, oldConsoleWarn, oldConsoleError;
 describe("Load", () => {
     beforeEach(() => {
         f = fixtures();
+        f("webchain", {
+            cache: {},
+            require: f("require", jasmine.createSpy()),
+            sources: {},
+            config: {
+                resolve: {
+                    loaders: {
+
+                    }
+                }
+            }
+        });
         oldConsoleWarn = global.console.warn;
         oldConsoleError = global.console.error;
         global.console.warn = f("consoleWarn", jasmine.createSpy());
         global.console.error = f("consoleError", jasmine.createSpy());
         f("load", mock.require('./../load', {
             './../resolve-name': f("resolveName", jasmine.createSpy()),
-            './../resolve-deps-names': f("resolveDepsNames", jasmine.createSpy()),
-            './../webchain': f("webchain", {
-                cache: {},
-                require: f("require", jasmine.createSpy()),
-                sources: {},
-                config: {
-                    resolve: {
-                        loaders: {
-
-                        }
-                    }
-                }
-            })
-        }
-        ));
+            './../resolve-deps-names': f("resolveDepsNames", jasmine.createSpy())
+        }).bind(f("webchain")));
         f("webchain").config.resolve.loaders[f("type1")] = f("loaderConfig", { config: f("loaderConfigValue"), loader: f("loader", jasmine.createSpy()) });
         f("executeCallback", jasmine.createSpy());
         f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", []))
@@ -71,11 +70,11 @@ describe("Load", () => {
     })
     it("when all deps was loaded, should call callback with resolved name", () => {
         f("resolveName").and.returnValue(f("resolvedName"));
-        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", 
-        [
-            [f("type1"), f("type1Name1")],
-            [f("type1"), f("type1Name2")]
-        ]));
+        f("resolveDepsNames").and.returnValue(f("resolvedDepsNames",
+            [
+                [f("type1"), f("type1Name1")],
+                [f("type1"), f("type1Name2")]
+            ]));
         f("load")(f("name"), f("deps", [f("dep1", [f("type1", [])])]), f("executeCallback"), f("callback"));
         f("loader").calls.argsFor(0)[2]();
         f("loader").calls.argsFor(1)[2]();

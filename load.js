@@ -1,13 +1,17 @@
 var resolveName = require('./resolve-name');
 var resolveDepNames = require('./resolve-deps-names');
-var webchain = require('./webchain');
-module.exports = (name, dependencies, executeCallback, callback) => {
+module.exports = function (name, dependencies, executeCallback, callback) {
     var resolvedName = resolveName(name);
-    if (typeof (webchain.cache[resolvedName]) !== "undefined") {
-        console.warn("Module " + resolvedName + " already exists in cache")
+    if (typeof (this.cache[resolvedName]) !== "undefined") {
+        /* eslint-disable no-console */
+        console.warn("Module " + resolvedName + " already exists in cache");
+        /* eslint-enable */
     }
     var depNames = resolveDepNames(dependencies);
-    webchain.sources[resolvedName] = executeCallback.bind(undefined, depNames);
+    this.sources[resolvedName] = {
+        callback: executeCallback,
+        dependencies: depNames
+    };
     var i = 0;
     if (dependencies.length == 0) {
         callback(null, resolvedName);
@@ -15,7 +19,7 @@ module.exports = (name, dependencies, executeCallback, callback) => {
     }
     depNames.map((dep) => {
         var typeName = dep[0];
-        var typeLoaderConfig = webchain.config.resolve.loaders[typeName];
+        var typeLoaderConfig = this.config.resolve.loaders[typeName];
         if (!typeLoaderConfig) {
             throw new Error("Not found loader for type " + typeName);
         }

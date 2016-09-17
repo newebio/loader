@@ -1,9 +1,7 @@
-
-var Webchain = require('./webchain');
-var webchain = Webchain();
+var webchain = require('./webchain');
 if (typeof (window) !== "undefined") {
     window.webchain = webchain;
-    window.define = webchain.define.bind(undefined, true);
+    window.define = webchain.define.bind(webchain, true);
 }
 if (typeof (module) !== "undefined" && module.exports) {
     module.exports = webchain;

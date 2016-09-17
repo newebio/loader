@@ -1,11 +1,10 @@
-var webchain = require('./webchain');
-module.exports = (name) => {
-    if (webchain.cache[name]) {
-        return webchain.cache[name];
+module.exports = function (name) {
+    if (this.cache[name]) {
+        return this.cache[name];
     }
-    if (!webchain.sources[name]) {
+    if (!this.sources[name]) {
         throw new Error("Not found module " + name + " for require");
     }
-    webchain.cache[name] = webchain.execute(name);
-    return webchain.cache[name];
+    this.cache[name] = this.execute(name);
+    return this.cache[name];
 }

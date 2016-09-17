@@ -1,7 +1,7 @@
-module.exports = (webchain, isExecute, name, dependencies, callback) => {
-    webchain.load(name, dependencies, callback, (err, resolvedName) => {
+module.exports = function (isExecute, name, dependencies, callback) {
+    this.load(name, dependencies, callback, (err, resolvedName) => {
         if (isExecute) {
-            webchain.require(resolvedName);
+            this.require(resolvedName);
         }
     });
-} 
+}

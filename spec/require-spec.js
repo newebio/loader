@@ -1,15 +1,12 @@
-var mock = require('mock2');
 var fixtures = require('fixture2'), f;
 describe("Require", () => {
     beforeEach(() => {
         f = fixtures();
-        f("require", mock.require('./../require', {
-            './../webchain': f("webchain", {
-                execute: f("execute", jasmine.createSpy()),
-                cache: {},
-                sources: {}
-            })
-        }));
+        f("require", require('./../require').bind(f("webchain", {
+            execute: f("execute", jasmine.createSpy()),
+            cache: {},
+            sources: {}
+        })));
     })
     it("when module cached, should return it from cache", () => {
         f("webchain").cache[f("name")] = f("cached");
