@@ -4,7 +4,7 @@ var define = require('./define');
 var evaluate = require('./evaluate');
 var load = require('./load');
 var execute = require('./execute');
-var loader = {
+var system = {
     config: config,
     evaluate: evaluate,
     define: define,
@@ -14,5 +14,5 @@ var loader = {
     sources: {},
     cache: {}
 };
-loader.config();
-module.exports = loader; 
+system.config();
+module.exports = system; 

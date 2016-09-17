@@ -46,41 +46,17 @@
 
 	"use strict";
 
-	var webchain = __webpack_require__(1);
+	var system = __webpack_require__(12);
 	if (typeof window !== "undefined") {
-	    window.webchain = webchain;
-	    window.define = webchain.define.bind(webchain, true);
+	    window.system = system;
+	    window.define = system.define.bind(system, true);
 	}
 	if (typeof module !== "undefined" && module.exports) {
-	    module.exports = webchain;
+	    module.exports = system;
 	}
 
 /***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var config = __webpack_require__(2);
-	var req = __webpack_require__(6);
-	var define = __webpack_require__(7);
-	var evaluate = __webpack_require__(5);
-	var load = __webpack_require__(8);
-	var execute = __webpack_require__(11);
-	var loader = {
-	    config: config,
-	    evaluate: evaluate,
-	    define: define,
-	    load: load,
-	    execute: execute,
-	    require: req,
-	    sources: {},
-	    cache: {}
-	};
-	loader.config();
-	module.exports = loader;
-
-/***/ },
+/* 1 */,
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -355,6 +331,31 @@
 	    arguments[2].call(undefined, dependencies, require, exports, module);
 	    return typeof exports === "undefined" ? module.exports : exports;
 	}
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var config = __webpack_require__(2);
+	var req = __webpack_require__(6);
+	var define = __webpack_require__(7);
+	var evaluate = __webpack_require__(5);
+	var load = __webpack_require__(8);
+	var execute = __webpack_require__(11);
+	var system = {
+	    config: config,
+	    evaluate: evaluate,
+	    define: define,
+	    load: load,
+	    execute: execute,
+	    require: req,
+	    sources: {},
+	    cache: {}
+	};
+	system.config();
+	module.exports = system;
 
 /***/ }
 /******/ ]);
