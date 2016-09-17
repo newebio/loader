@@ -4,7 +4,7 @@ module.exports = function (name, dependencies, executeCallback, callback) {
     var resolvedName = resolveName(name);
     if (typeof (this.cache[resolvedName]) !== "undefined") {
         /* eslint-disable no-console */
-        console.warn("Module " + resolvedName + " already exists in cache");
+        //console.warn("Module " + resolvedName + " already exists in cache");
         /* eslint-enable */
     }
     var depNames = resolveDepNames(dependencies);
@@ -18,6 +18,15 @@ module.exports = function (name, dependencies, executeCallback, callback) {
         return;
     }
     depNames.map((dep) => {
+        var name = resolveName(dep);
+        if (typeof (this.cache[name]) !== "undefined") {
+            i++;
+            if (depNames.length == i) {
+                callback(null, resolvedName);
+            }
+            return;
+        }
+        this.cache[name] = null;
         var typeName = dep.shift();
         var typeLoaderConfig = this._config.loaders[typeName];
         if (!typeLoaderConfig) {

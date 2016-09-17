@@ -1,5 +1,5 @@
-define([".", ""], [".", [["test"]]], function (dependencies, require) {
+define([".", ""], [".", [["test"],["inc1"]]], function (dependencies, require) {
     var test = require(dependencies[0]);
-
-    console.log("Hello, " + test);
+    var inc1 = require(dependencies[1]);
+    console.log("Hello, " + test + "\n" + inc1);
 })

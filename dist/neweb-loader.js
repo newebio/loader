@@ -234,7 +234,7 @@
 	    var resolvedName = resolveName(name);
 	    if (typeof this.cache[resolvedName] !== "undefined") {
 	        /* eslint-disable no-console */
-	        console.warn("Module " + resolvedName + " already exists in cache");
+	        //console.warn("Module " + resolvedName + " already exists in cache");
 	        /* eslint-enable */
 	    }
 	    var depNames = resolveDepNames(dependencies);
@@ -250,6 +250,15 @@
 	        return;
 	    }
 	    depNames.map(function (dep) {
+	        var name = resolveName(dep);
+	        if (typeof _this.cache[name] !== "undefined") {
+	            i++;
+	            if (depNames.length == i) {
+	                callback(null, resolvedName);
+	            }
+	            return;
+	        }
+	        _this.cache[name] = null;
 	        var typeName = dep.shift();
 	        var typeLoaderConfig = _this._config.loaders[typeName];
 	        if (!typeLoaderConfig) {
