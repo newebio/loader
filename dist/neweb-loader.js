@@ -299,16 +299,20 @@
 
 	"use strict";
 
-	module.exports = function (deps, name) {
+	module.exports = function (deps) {
 	    var names = [];
-	    deps.map(function (d) {
-	        if (typeof name === "undefined") {
-	            name = [d[0]];
-	        } else {
-	            name.push(d[0]);
+	    walk(deps, []);
+	    function walk(cur, name) {
+	        name.push(cur[0]);
+	        if (typeof cur[1][1] === "string") {
+	            cur[1].map(function (n) {
+	                names.push(name.concat(n));
+	            });
+	            return;
 	        }
-	    });
-	    return name;
+	        walk(cur[1], name);
+	    }
+	    return names;
 	};
 
 /***/ },

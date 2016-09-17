@@ -1,12 +1,15 @@
-module.exports = (deps, name) => {
+module.exports = (deps) => {
     var names = [];
-    deps.map((d) => {
-        if (typeof (name) === "undefined") {
-            name = [d[0]];
-        } else {
-            name.push(d[0]);
+    walk(deps, []);
+    function walk(cur, name) {
+        name.push(cur[0]);
+        if (typeof (cur[1][1]) === "string") {
+            cur[1].map((n) => {
+                names.push(name.concat(n));
+            })
+            return;
         }
-
-    })
-    return name;
+        walk(cur[1], name);
+    }
+    return names;
 }
