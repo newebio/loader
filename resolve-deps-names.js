@@ -1,6 +1,6 @@
 module.exports = (deps) => {
     var names = [];
-    walk(deps, []);
+    deps.map((d) => walk(d, []));
     function walk(cur, name) {
         name = name.concat(cur[0]);
         if (!cur[1]) {

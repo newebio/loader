@@ -1,6 +1,16 @@
 var ajaxLoader = require('./loaders/ajax');
+var cssLoader = require('./loaders/css');
 var defaultConfig = {
     loaders: {
+        "css": {
+            loader: cssLoader,
+            config: {
+                baseUrl: "/",
+                paths: {
+                    "*": "*"
+                }
+            }
+        },        
         ".": {
             loader: ajaxLoader,
             config: {
