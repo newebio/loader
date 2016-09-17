@@ -7,7 +7,7 @@ describe("Execute", () => {
             sources: {
                 mod1: {
                     callback: f("mod1", function (dependencies, require, exports, module) {
-                        exports = require("mod2");
+                        module.exports = require("mod2");
                     }),
                     dependencies: f("depsNames")
                 }

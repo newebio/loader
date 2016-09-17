@@ -1,4 +1,4 @@
-define([".", "test"], [], function () {
-    exports = ("world!")
+define([".", "test"], [], function (dependencies, require, exports, module) {
+    module.exports = ("world!")
 
 })
