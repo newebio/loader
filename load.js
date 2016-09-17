@@ -10,7 +10,7 @@ module.exports = function (name, dependencies, executeCallback, callback) {
     var depNames = resolveDepNames(dependencies);
     this.sources[resolvedName] = {
         callback: executeCallback,
-        dependencies: depNames
+        dependencies: depNames.map((d) => d.join("~"))
     };
     var i = 0;
     if (dependencies.length == 0) {
@@ -18,17 +18,17 @@ module.exports = function (name, dependencies, executeCallback, callback) {
         return;
     }
     depNames.map((dep) => {
-        var typeName = dep[0];
-        var typeLoaderConfig = this.config.resolve.loaders[typeName];
+        var typeName = dep.shift();
+        var typeLoaderConfig = this._config.loaders[typeName];
         if (!typeLoaderConfig) {
             throw new Error("Not found loader for type " + typeName);
         }
-        typeLoaderConfig.loader(dep[1], typeLoaderConfig.config, (err) => {
+        typeLoaderConfig.loader.call(this, dep, typeLoaderConfig.config, (err) => {
             if (err) {
                 throw new Error(err);
             }
             i++;
-            if (dependencies.length == i) {
+            if (depNames.length == i) {
                 callback(null, resolvedName);
             }
         })

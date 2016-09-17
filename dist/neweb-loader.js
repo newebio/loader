@@ -64,10 +64,12 @@
 	var config = __webpack_require__(2);
 	var req = __webpack_require__(6);
 	var define = __webpack_require__(7);
+	var evaluate = __webpack_require__(5);
 	var load = __webpack_require__(8);
 	var execute = __webpack_require__(11);
-	module.exports = {
+	var loader = {
 	    config: config,
+	    evaluate: evaluate,
 	    define: define,
 	    load: load,
 	    execute: execute,
@@ -75,6 +77,8 @@
 	    sources: {},
 	    cache: {}
 	};
+	loader.config();
+	module.exports = loader;
 
 /***/ },
 /* 2 */
@@ -84,7 +88,7 @@
 
 	var ajaxLoader = __webpack_require__(3);
 	var defaultConfig = {
-	    resolve: {
+	    loaders: {
 	        ".": {
 	            loader: ajaxLoader,
 	            config: {
@@ -105,9 +109,8 @@
 	        }
 	    }
 	};
-	module.exports = function (neweb, opts) {
-	    opts = opts || {};
-	    opts.loaders = opts.loaders || {};
+	module.exports = function (opts) {
+	    this._config = opts || defaultConfig;
 	};
 
 /***/ },
@@ -117,13 +120,16 @@
 	'use strict';
 
 	var resolvePath = __webpack_require__(4);
-	var evaluate = __webpack_require__(5);
 	module.exports = function (modulePath, config, callback) {
+	    var this_ = this;
 	    var XHR = "onload" in new XMLHttpRequest() ? XMLHttpRequest : XDomainRequest;
 	    var xhr = new XHR();
-	    xhr.open('GET', 'http://anywhere.com/request', true);
+	    xhr.open('GET', modulePath.join("/") + ".js", true);
 	    xhr.onload = function () {
-	        evaluate(this.responseText);
+	        if (this.status !== 200) {
+	            return callback('Error: ' + this.status);
+	        }
+	        this_.evaluate(this.responseText);
 	        callback();
 	    };
 	    xhr.onerror = function () {
@@ -197,7 +203,7 @@
 	"use strict";
 
 	module.exports = function (code) {
-	    var define = this.define.bind(undefined, false);
+	    var define = this.define.bind(this, false);
 	    _evaluate(define, code);
 	};
 	/* eslint-disable no-unused-vars */
@@ -258,7 +264,9 @@
 	    var depNames = resolveDepNames(dependencies);
 	    this.sources[resolvedName] = {
 	        callback: executeCallback,
-	        dependencies: depNames
+	        dependencies: depNames.map(function (d) {
+	            return d.join("~");
+	        })
 	    };
 	    var i = 0;
 	    if (dependencies.length == 0) {
@@ -266,17 +274,17 @@
 	        return;
 	    }
 	    depNames.map(function (dep) {
-	        var typeName = dep[0];
-	        var typeLoaderConfig = _this.config.resolve.loaders[typeName];
+	        var typeName = dep.shift();
+	        var typeLoaderConfig = _this._config.loaders[typeName];
 	        if (!typeLoaderConfig) {
 	            throw new Error("Not found loader for type " + typeName);
 	        }
-	        typeLoaderConfig.loader(dep[1], typeLoaderConfig.config, function (err) {
+	        typeLoaderConfig.loader.call(_this, dep, typeLoaderConfig.config, function (err) {
 	            if (err) {
 	                throw new Error(err);
 	            }
 	            i++;
-	            if (dependencies.length == i) {
+	            if (depNames.length == i) {
 	                callback(null, resolvedName);
 	            }
 	        });
@@ -303,14 +311,21 @@
 	    var names = [];
 	    walk(deps, []);
 	    function walk(cur, name) {
-	        name.push(cur[0]);
-	        if (typeof cur[1][1] === "string") {
+	        name = name.concat(cur[0]);
+	        if (!cur[1]) {
+	            names.push(name);
+	            return;
+	        }
+
+	        if (typeof cur[1][0] === "string") {
 	            cur[1].map(function (n) {
 	                names.push(name.concat(n));
 	            });
-	            return;
+	        } else {
+	            cur[1].map(function (n) {
+	                walk(n, name);
+	            });
 	        }
-	        walk(cur[1], name);
 	    }
 	    return names;
 	};
@@ -322,7 +337,7 @@
 	"use strict";
 
 	module.exports = function (name) {
-	    return _execute.call(undefined, this.require, this.sources[name].dependencies, this.sources[name].callback.toString());
+	    return _execute.call(undefined, this.require.bind(this), this.sources[name].dependencies, this.sources[name].callback.toString());
 	};
 	/* eslint-disable no-unused-vars */
 	function _execute(require, dependencies) {

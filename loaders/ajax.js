@@ -1,11 +1,14 @@
 var resolvePath = require('./../paths');
-var evaluate = require('./../evaluate');
-module.exports = (modulePath, config, callback) => {
+module.exports = function (modulePath, config, callback) {
+    var this_ = this;
     var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
     var xhr = new XHR();
-    xhr.open('GET', 'http://anywhere.com/request', true);
+    xhr.open('GET', modulePath.join("/") + ".js", true);
     xhr.onload = function () {
-        evaluate(this.responseText);
+        if (this.status !== 200) {
+            return callback('Error: ' + this.status);
+        }
+        this_.evaluate(this.responseText);
         callback();
     }
     xhr.onerror = function () {

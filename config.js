@@ -1,6 +1,6 @@
 var ajaxLoader = require('./loaders/ajax');
 var defaultConfig = {
-    resolve: {
+    loaders: {
         ".": {
             loader: ajaxLoader,
             config: {
@@ -21,7 +21,6 @@ var defaultConfig = {
         }
     }
 }
-module.exports = (neweb, opts) => {
-    opts = opts || {};
-    opts.loaders = opts.loaders || {}
+module.exports = function (opts) {
+    this._config = opts || defaultConfig;
 }

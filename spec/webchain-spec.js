@@ -3,10 +3,11 @@ describe("Singletone", () => {
     it("when require, should export object with all fields", () => {
         var webchain = mock.require('./../webchain', {
             './../load': f("load"),
-            './../config': f("config"),
+            './../config': f("config", jasmine.createSpy()),
             './../require': f("require"),
             './../define': f("define"),
-            './../execute': f("execute")
+            './../execute': f("execute"),
+            './../evaluate': f("evaluate")
         });
         expect(webchain).toEqual({
             load: f("load"),
@@ -14,8 +15,10 @@ describe("Singletone", () => {
             require: f("require"),
             define: f("define"),
             execute: f("execute"),
+            evaluate: f("evaluate"),
             sources: {},
             cache: {}
         })
+        expect(f("config").calls.allArgs()).toEqual([[]]);
     })
 })

@@ -7,11 +7,9 @@ describe("Load", () => {
             cache: {},
             require: f("require", jasmine.createSpy()),
             sources: {},
-            config: {
-                resolve: {
-                    loaders: {
+            _config: {
+                loaders: {
 
-                    }
                 }
             }
         });
@@ -23,7 +21,7 @@ describe("Load", () => {
             './../resolve-name': f("resolveName", jasmine.createSpy()),
             './../resolve-deps-names': f("resolveDepsNames", jasmine.createSpy())
         }).bind(f("webchain")));
-        f("webchain").config.resolve.loaders[f("type1")] = f("loaderConfig", { config: f("loaderConfigValue"), loader: f("loader", jasmine.createSpy()) });
+        f("webchain")._config.loaders[f("type1")] = f("loaderConfig", { config: f("loaderConfigValue"), loader: f("loader", jasmine.createSpy()) });
         f("executeCallback", jasmine.createSpy());
         f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", []))
         f("callback", jasmine.createSpy());
@@ -59,7 +57,7 @@ describe("Load", () => {
     it("when all loader exists, should call every loader with config", () => {
         f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", [[f("type1"), f("type1Name")]]));
         f("load")(f("name"), f("deps", [f("dep1", [f("type1", [])])]), f("executeCallback"), f("callback"));
-        expect(f("loader").calls.allArgs()).toEqual([[f("type1Name"), f("loaderConfigValue"), jasmine.any(Function)]])
+        expect(f("loader").calls.allArgs()).toEqual([[[f("type1Name")], f("loaderConfigValue"), jasmine.any(Function)]])
     })
     it("when loader return error, should throw it", () => {
         f("resolveDepsNames").and.returnValue(f("resolvedDepsNames", [[f("type1"), f("type1Name")]]));

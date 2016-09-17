@@ -1,5 +1,5 @@
 module.exports = function (name) {
-    return _execute.call(undefined, this.require, this.sources[name].dependencies, this.sources[name].callback.toString());
+    return _execute.call(undefined, this.require.bind(this), this.sources[name].dependencies, this.sources[name].callback.toString());
 }
 /* eslint-disable no-unused-vars */
 function _execute(require, dependencies) {

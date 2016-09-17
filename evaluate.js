@@ -1,5 +1,5 @@
 module.exports = function (code) {
-    var define = this.define.bind(undefined, false);
+    var define = this.define.bind(this, false);
     _evaluate(define, code);
 }
 /* eslint-disable no-unused-vars */
