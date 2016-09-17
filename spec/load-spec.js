@@ -43,11 +43,9 @@ describe("Load", () => {
         f("resolveDepsNames").and.returnValue(f("resolvedDepsNames"))
         f("load")(f("name"), f("deps", [f("dep1", [f("type1")])]), f("executeCallback"), f("callback"));
         var sources = {};
-        sources[f("resolvedName")] = jasmine.any(Function);
+        sources[f("resolvedName")] = { callback: f("executeCallback"), dependencies: f("resolvedDepsNames") };
         expect(f("webchain").sources).toEqual(sources);
-        f("webchain").sources[f("resolvedName")]();
-        expect(f("resolveDepsNames").calls.allArgs()).toEqual([[f("deps")]])
-        expect(f("executeCallback").calls.allArgs()).toEqual([[f("resolvedDepsNames")]]);
+        expect(f("resolveDepsNames").calls.allArgs()).toEqual([[f("deps")]]);
     })
     it("when empty deps, should call callback with resolved name", () => {
         f("resolveName").and.returnValue(f("resolvedName"));

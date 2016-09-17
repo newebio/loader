@@ -5,9 +5,12 @@ describe("Execute", () => {
         f("webchain", {
             require: f("require", jasmine.createSpy()),
             sources: {
-                mod1: f("mod1", function (require, exports, module) {
-                    exports = require("mod2");
-                })
+                mod1: {
+                    callback: f("mod1", function (dependencies, require, exports, module) {
+                        exports = require("mod2");
+                    }),
+                    dependencies: f("depsNames")
+                }
             }
         })
         f("execute", require('./../execute').bind(f("webchain")));
